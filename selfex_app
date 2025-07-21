@@ -1,0 +1,174 @@
+import mysql.connector as con                                                       #connecting to mysql database
+mycon=con.connect(host="localhost",user="root",passwd="$h3bIn2r",database="pandf")
+if mycon.is_connected():
+    print("connection successful!!")
+else:
+    print("trouble connecting.. try again later")
+cursor=mycon.cursor()
+
+def income():                           #fuction to record income
+    print()
+    print("Recording income...")
+    date=str(input("enter the date in the format(YYYY-MM-DD):"))
+    amount=int(input("enter the amount:"))
+    source=str(input("enter the source:"))
+    st="insert into income values('{}',{},'{}');".format(date,amount,source)
+    cursor.execute(st)
+    mycon.commit()
+def expense():                          #fuction to record expenses
+    print()
+    print("Recording expenses..")
+    date = str(input("enter the date in the format(YYYY-MM-DD):"))
+    amount = int(input("enter the amount:"))
+    source = str(input("enter the source:"))
+    st = "insert into expense values('{}',{},'{}');".format(date, amount, source)
+    cursor.execute(st)
+    mycon.commit()
+
+def searchincome(): #search for income
+    print()
+    print("Searching for income data..")
+    print("1.I_DATE\n"
+          "2.I_AMOUNT\n"
+          "3.I_SOURCE\n",)
+
+    while True:
+        s1 = int(input("choose the attribute:"))
+        if s1==1:
+            s2 = input("enter the value:")
+            st = "select * from income where I_DATE='{}'".format(s2)
+            break
+        elif s1==2:
+
+            s2 = input("enter the value:")
+            st="select * from income where I_AMOUNT={}".format(s2)
+            break
+        elif s1==3:
+            s2 = input("enter the value:")
+            st = "select * from income where I_SOURCE like '%{}%'".format(s2)
+            break
+
+        else:
+            print("wrong option..try again")
+            continue
+
+    cursor.execute(st)
+    s=cursor.fetchall()
+    if s:
+        for row in s:
+            print(f"date:{row[0]},amount:{row[1]},source:{row[2]}")
+    else:
+        print("record not found")
+def searchexpense():
+    print()
+    print("Searching for expense data..")
+    print("1.E_DATE\n"
+          "2.E_AMOUNT\n"
+          "3.E_SOURCE\n", )
+
+    while True:
+        s1 = int(input("choose the attribute:"))
+        if s1 == 1:
+            s2 = input("enter the value:")
+            st = "select * from expense where E_DATE='{}'".format(s2)
+            break
+        elif s1 == 2:
+
+            s2 = input("enter the value:")
+            st = "select * from expense where E_AMOUNT={}".format(s2)
+            break
+        elif s1 == 3:
+            s2 = input("enter the value:")
+            st = "select * from expense where E_SOURCE like '%{}%'".format(s2)
+            break
+
+        else:
+            print("wrong option..try again")
+            continue
+    cursor.execute(st)
+    s = cursor.fetchall()
+    if s:
+        for row in s:
+            print(f"date:{row[0]},amount:{row[1]},source:{row[2]}")
+    else:
+        print("record not found")
+
+def displayincome():
+    st="select * from income"
+    cursor.execute(st)
+    s=cursor.fetchall()
+    for row in s:
+        print(f"date:{row[0]},amount:{row[1]},source:{row[2]}")
+def displayexpense():
+    st="select * from expense"
+    cursor.execute(st)
+    s=cursor.fetchall()
+    for row in s:
+        print(f"date:{row[0]},amount:{row[1]},source:{row[2]}")
+print()
+print("Hello!! Welcome Back Captain")
+
+print("1.Enter a new data")
+print("2.Search for a data")
+print("3.Display all data")
+print()
+opt1=int(input("choose an option:"))    #taking option for whether user want to search for a data or enter a new one
+
+if opt1==1:                                     #for recording new data
+    print("entering a new data")
+    print()
+    print("1.enter new income data")
+    print("2.enter new expense data")
+
+    while True:
+        opt2=int(input("choose an option:"))
+
+        if opt2==1:
+            income()
+            break
+        elif opt2==2:
+            expense()
+            break
+        else:
+            print("try choosing again..")
+
+
+elif opt1==2:                           #searchhing for a data
+    print("Searching for data")
+    print()
+    print("1.search for income data")
+    print("2.search for expense data")
+
+    while True:
+        opt3 = int(input("choose an option:"))
+
+        if opt3 == 1:
+            searchincome()
+            break
+        elif opt3 == 2:
+            searchexpense()
+            break
+        else:
+            print("try choosing again..")
+
+elif opt1==3:
+    print()
+    print("1.display all income data")
+    print("2.display all expense data")
+    while True:
+        opt4 = int(input("choose an option:"))
+
+        if opt4 == 1:
+            displayincome()
+            break
+        elif opt4 == 2:
+            displayexpense()
+            break
+        else:
+            print("try choosing again..")
+else:
+    print("wrong option..please choose 1 or 2") #else option
+
+
+
+
